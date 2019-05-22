@@ -23,6 +23,15 @@ def coprime(a, b):
         a, b = b, a % b
     return a
     
+def modInverse(a, m) : 
+
+    a = a % m
+
+    for x in range(1, m) : 
+
+        if ((a * x) % m == 1) : 
+
+            return x
     
 def extended_gcd(aa, bb):
     lastremainder, remainder = abs(aa), abs(bb)
