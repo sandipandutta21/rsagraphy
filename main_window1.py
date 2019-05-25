@@ -45,9 +45,6 @@ btn_video = Button( main_window, text = "Video", command = video )
 btn_video.place( x=310, y=140 )
 
 btn_exit = Button( main_window, text = "Exit", command = close)
-btn_exit.place( x=140, y=200 )
-
-btn_help = Button( main_window, text = "HELP", command = close)
-btn_help.place( x=210, y=200 )
+btn_exit.place( x=180, y=200 )
 
 main_window.mainloop()

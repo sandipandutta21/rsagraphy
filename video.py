@@ -19,6 +19,18 @@ video_window.title ('Video Encryption')
 
 start = time.time()
 
+efile = open('efile.pem', 'r')
+e = int(efile.read())
+efile.close()
+ 
+dfile = open('dfile.pem', 'r')
+d = int(dfile.read())
+dfile.close()
+   
+nfile = open('nfile.pem', 'r')
+n = int(nfile.read()) 
+nfile.close()
+
 endata = './data'
 dedata = './Endata'
 dedata2 = './Dedata'
@@ -34,6 +46,12 @@ def decrypt():
 #		os.makedirs('Endata')
 #except OSError:
 #    	messagebox.showinfo('Error Occured', 'Error: Creating directory of encrypted data')
+
+def get_frame_rate(filename):
+
+	cap = cv2.VideoCapture(filename)
+	fps = cap.get(cv2.CAP_PROP_FPS)
+	return fps
 
 def load_image_encrypt(folder):
 	
@@ -56,6 +74,13 @@ def load_image_encrypt(folder):
 			break
 
 	messagebox.showinfo('Finish!', 'Encryption Done succesfully!')
+
+	framerate = get_frame_rate(videofile)
+	fr_file = open('frame_rate.pem', 'w')
+	fr_file.write('%d' %(int(framerate)))
+	fr_file.close()
+	
+	
 
 def load_image_decrypt(folder):
 	
@@ -88,23 +113,6 @@ def load_image_decrypt(folder):
 
 	messagebox.showinfo('Finish!', 'Decryption Done succesfully!')
 
-def RGBencryption(img, filename):
-	
-	img = img.astype(numpy.uint16)
-	a = img.shape
-	img= img.tolist()
-
-	for i in (range(len(img))):
-		for j in (range(len(img[i]))):
-			for k in (range(len(img[i][j]))):
-				x = img[i][j][k] 
-				x = (pow(x,3)%25777)
-				img[i][j][k] = x
-	img = numpy.array(img).astype(numpy.uint16)
-	name = './Endata/'+str(filename)
-	imageio.imwrite(name, img, format='PNG-FI')
-
-
 def powmod(b, e, m):
 
 	b2 = b
@@ -115,6 +123,23 @@ def powmod(b, e, m):
 		b2 = (b2*b2) % m
 		e >>= 1
 	return res
+
+def RGBencryption(img, filename):
+	
+	img = img.astype(numpy.uint16)
+	a = img.shape
+	img= img.tolist()
+
+	for i in (range(len(img))):
+		for j in (range(len(img[i]))):
+			for k in (range(len(img[i][j]))):
+				x = img[i][j][k] 
+				x = powmod(x,e,n)
+				img[i][j][k] = x
+	img = numpy.array(img).astype(numpy.uint16)
+	name = './Endata/'+str(filename)
+	imageio.imwrite(name, img, format='PNG-FI')
+
 
 def RGBdecryption(img, filename):
 
@@ -131,7 +156,7 @@ def RGBdecryption(img, filename):
 		for j1 in (range(len(img1[i1]))):
 			for k1 in (range(len(img1[i1][j1]))):
 				x1 = img1[i1][j1][k1] 
-				x1 = powmod(x1,16971,25777)
+				x1 = powmod(x1,d,n)
 				img1[i1][j1][k1] = x1
 
 	img1 = numpy.array(img1)#.astype(numpy.uint16)#.reshape(184,275)
@@ -177,12 +202,6 @@ def vid_to_image(foldername ,filename):
 	cap.release()
 	cv2.destroyAllWindows()
 
-def get_frame_rate(filename):
-
-	cap = cv2.VideoCapture(filename)
-	fps = cap.get(cv2.CAP_PROP_FPS)
-	return fps
-
 def image_to_vid(folder, vidname):  
 	
 	image_folder = folder
@@ -202,7 +221,11 @@ def image_to_vid(folder, vidname):
 	frame = cv2.imread(os.path.join(image_folder, sort_image[0]))
 	height, width, layers = frame.shape
 
-	video = cv2.VideoWriter(video_name, 0, 29, (width,height))
+	frameratefile = open('frame_rate.pem', 'r')
+	framerate = int(frameratefile.read())
+	frameratefile.close()
+	
+	video = cv2.VideoWriter(video_name, 0, framerate, (width,height))
 
 	for image in sort_image:
 	    video.write(cv2.imread(os.path.join(image_folder, image)))
@@ -215,13 +238,13 @@ def goback():
 	exit()
 
 btn_select_img = Button( video_window, text = "Go Back" , command = goback)
-btn_select_img.place( x=140, y=150 )
+btn_select_img.place( x=130, y=120 )
 
 btn_encrypt = Button( video_window, text = "Encrypt Video" , command = encrypt)
-btn_encrypt.place( x=20, y=100 )
+btn_encrypt.place( x=20, y=60 )
 
 btn_decrypt = Button( video_window, text = "Decrypt Video" , command = decrypt)
-btn_decrypt.place( x=200, y=100 )
+btn_decrypt.place( x=200, y=60 )
 
 video_window.mainloop()
 

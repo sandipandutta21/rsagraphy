@@ -50,17 +50,17 @@ def enfinish16():
 	messagebox.showinfo('Done!', 'Encryption is Finished and saved as NEG.wav and POS.wav ')
 
 def enfinish8():
-	messagebox.showinfo('Done!', 'Encryption is Finished and saved as EN.wav')
+	messagebox.showinfo('Done!', 'Encryption is Finished and saved as Encrypted.wav')
 
 def definish():
-	messagebox.showinfo('Done!', 'Decryption is finished and saved as DE.wav')
+	messagebox.showinfo('Done!', 'Decryption is finished and saved as Decrypted.wav')
 	
 
 def sixteen_encrypt():
 	
 	try:
 			start = time.time()
-			filename = askopenfilename()
+			filename = askopenfilename(filetypes = [( "WAV files", "*.wav" )])
 			foo = wave.open(filename, 'rb')
 			channels = foo.getnchannels()
 			FS = foo.getframerate()
@@ -144,7 +144,7 @@ def sixteen_encrypt():
 
 				print('\n Encrypted positive array:')
 				print(posdata)
-				print('\n Encrypted positive array:')
+				print('\n Encrypted negative array:')
 				print(negdata)
 				print('\n')
 				scipy.io.wavfile.write('Positive.wav', fs, posdata)
@@ -182,7 +182,7 @@ def sixteen_encrypt():
 					dt = dt.newbyteorder('>')
 					buffer = f.read(44)
 					#print(type(buffer))
-					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.int16) #TODO remove the file header 
+					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.int16)
 					buffer = f.read()
 					binarySound = numpy.frombuffer(buffer,dtype=numpy.int16)	
 				#Encryption
@@ -261,7 +261,7 @@ def sixteen_encrypt():
 				plt.title('Posdata Wave')
 				plt.plot(Time, posdata) 
 				#plt.show()
-				plt.savefig('posdata.png')
+				plt.savefig('Posdata.png')
 
 				Time= numpy.linspace(0, len(negdata)/fs, num=len(negdata))
 				plt.figure(3)
@@ -287,7 +287,7 @@ def eight_encrypt():
 
 			start = time.time()
 
-			filename = askopenfilename() 
+			filename = askopenfilename(filetypes = [( "WAV files", "*.wav" )]) 
 			foo = wave.open(filename, 'rb')
 			channels = foo.getnchannels()
 			FS = foo.getframerate()
@@ -362,7 +362,7 @@ def eight_encrypt():
 
 				#Encryption
 
-				fs = 8000 #, data = scipy.io.wavfile.read(askopenfilename())
+				fs = FS #, data = scipy.io.wavfile.read(askopenfilename())
 				data = binarySound
 				print(data)
 				print(fs)
@@ -384,15 +384,15 @@ def eight_encrypt():
 				plt.plot(Time, data) 
 				#plt.show()
 				plt.savefig('Original.png')
+				data = data.tolist()
 
 				for i in range(len(data)):
-					#for j in range(0, tup[1]):
 					x = data[i] 
 					x = ((pow(x,e)) % n)
 					data[i] = x
 
 				print(data)
-				data = data.astype(numpy.int16)
+				data = numpy.array(data).astype(numpy.int16)
 				scipy.io.wavfile.write('Encrypted.wav', fs, data)
 
 				Time= numpy.linspace(0, len(data)/fs, num=len(data))
@@ -418,8 +418,8 @@ def sixteen_decrypt():
 
 	try:
  
-			file11 = askopenfilename()
-			file22 = askopenfilename()
+			file11 = askopenfilename(filetypes = [( "WAV files", "*.wav" )])
+			file22 = askopenfilename(filetypes = [( "WAV files", "*.wav" )])
 			file1 = wave.open(file11, 'rb')
 			file2 = wave.open(file22, 'rb')
 			channel1 = file1.getnchannels()
@@ -430,8 +430,7 @@ def sixteen_decrypt():
 			start = time.time()
 
 
-			if(channel1 == 2): #stereo #TODO check if channel1==channel2 #TODO exception handling of selecting 2 diff file
-
+			if(channel1 == 2): 
 				#Decryption
 					
 				fs, data = scipy.io.wavfile.read(file11)
@@ -487,7 +486,7 @@ def sixteen_decrypt():
 					dt = dt.newbyteorder('>')
 					buffer = f.read(44)
 					#print(type(buffer))
-					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.int16) #TODO remove the file header 
+					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.int16)
 					buffer = f.read()
 					binarySound = numpy.frombuffer(buffer,dtype=numpy.int16)
 				data = binarySound
@@ -500,7 +499,7 @@ def sixteen_decrypt():
 					dt = dt.newbyteorder('>')
 					buffer = f.read(44)
 					#print(type(buffer))
-					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.int16) #TODO remove the file header 
+					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.int16)
 					buffer = f.read()
 					binarySound = numpy.frombuffer(buffer,dtype=numpy.int16)
 				data1 = binarySound
@@ -541,7 +540,7 @@ def eight_decrypt():
 
 	try:
 
-			filename = askopenfilename()
+			filename = askopenfilename(filetypes = [( "WAV files", "*.wav" )])
 			foo = wave.open(filename, 'rb')
 			channels = foo.getnchannels()
 			FS = foo.getframerate()
@@ -575,7 +574,7 @@ def eight_decrypt():
 				data = numpy.array(data)
 				data = data.astype(numpy.uint8)
 				print(data)
-				scipy.io.wavfile.write('DE.wav', fs, data)
+				scipy.io.wavfile.write('Decrypted.wav', fs, data)
 				end = time.time()
 				ElspTime = (end-start)
 				print('\n Sorry for taking', +ElspTime, 'sec from your life!')
@@ -595,14 +594,14 @@ def eight_decrypt():
 					dt = dt.newbyteorder('>')
 					buffer = f.read(44)
 					#print(type(buffer))
-					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.uint8)
+					binaryHeader = numpy.frombuffer(buffer,dtype=numpy.uint16)
 					buffer = f.read()
-					binarySound = numpy.frombuffer(buffer,dtype=numpy.uint8)
+					binarySound = numpy.frombuffer(buffer,dtype=numpy.uint16)
 					print(type(binarySound))
 				print(binarySound)
-				print(data)
+				fs = FS
 				print(fs)
-				dataarray = data
+				data = binarySound
 				data = data.astype(numpy.int16)
 				data= data.tolist()
 			

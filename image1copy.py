@@ -57,7 +57,7 @@ def grey_encrypt():
 
 	try:
 
-			img = cv.imread(askopenfilename(), 0)
+			img = cv.imread(askopenfilename(filetypes = [( "PNG files", "*.png" ),( "JPEG files", "*.jpeg" ),( "JPG files", "*.jpg" ),("BMP files","*.BMP")]), 0)
 			#print(type(img))
 			img = img.astype(np.uint16)
 			a,b = img.shape
@@ -65,27 +65,15 @@ def grey_encrypt():
 			print(img)
 			print((a,b))
 			tup = a,b
-			pbar = Tk()
-			pbar.geometry('200x200')
-			pbar.title('P-BAR')
-			mpb = ttk.Progressbar(pbar, orient='horizontal', length = 200, mode = 'determinate')
-			mpb.pack()
-			#mpb['maximun'] = tup[0]
-
 
 			for i in tqdm(range(0, tup[0])):
-				mpb['maximum'] = tup[0]
-				mpb['value']=i
 				for j in (range(0, tup[1])):
 					x = img[i][j] 
 					x = powmod(x,e,n)
 					img[i][j] = x
-			pbar.mainloop()
 
 			print('\n\nEncrypted Image:\n\n')
 			print(img)
-			#vv.imshow(img)
-			#imageio.imshow('EnImage', img) ##TODO this part
 			cv.imwrite('Enimage.png', img)
 			end = time.time()
 			eTime = end - start
@@ -104,7 +92,7 @@ def rgb_encrypt():
 	
 	try:
 			
-			img = cv.imread(askopenfilename())
+			img = cv.imread(askopenfilename(filetypes = [( "PNG files", "*.png" ),( "JPEG files", "*.jpeg" ),( "JPG files", "*.jpg" ),("BMP files","*.BMP")]))
 			#print(type(img))
 			img = img.astype(np.uint16)
 			a = img.shape
@@ -145,7 +133,7 @@ def grey_decrypt():
 
 	try: 
 				
-			img1 = imageio.imread(askopenfilename())
+			img1 = imageio.imread(askopenfilenamefiletypes = [( "PNG files", "*.png" )]())
 			print('\n\nReading Encrypted Image again:\n\n')
 			print(img1)
 
@@ -180,7 +168,7 @@ def rgb_decrypt():
 
 	try:
 
-			img1 = imageio.imread(askopenfilename(), format='PNG-FI')
+			img1 = imageio.imread(askopenfilename(filetypes = [( "PNG files", "*.png" )]), format='PNG-FI')
 			print('\n\nReading Encrypted Image again:\n\n')
 			print(img1)
 			img1= img1.tolist()

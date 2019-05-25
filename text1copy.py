@@ -46,7 +46,7 @@ nfile.close()
 
 def encrypt():
 	try:
-		char_list = [ch for ch in open(askopenfilename()).read()]
+		char_list = [ch for ch in open(askopenfilename(filetypes = [("TXT files","*.txt")])).read()]
 		print(char_list)
 		num = [ord(char) for char in char_list]
 		print(num)
@@ -72,7 +72,7 @@ def encrypt():
 def decrypt():
 
 	try:
-		char_list = [ch for ch in (open(askopenfilename()).read()).split(';')]
+		char_list = [ch for ch in (open(askopenfilename(filetypes = [("TXT files","*.txt")])).read()).split(';')]
 		length = (len(char_list)) 
 		print(length)
 		char_list.pop(length-1)
@@ -109,13 +109,13 @@ def goback():
 	exit()
 
 btn_select_file = Button( txt_window, text = "Go Back" , command = goback)
-btn_select_file.place( x=140, y=150 )
+btn_select_file.place( x=130, y=120 )
 
 btn_encrypt = Button( txt_window, text = "Encrypt Text" , command = encrypt)
-btn_encrypt.place( x=20, y=100 )
+btn_encrypt.place( x=20, y=60 )
 
 btn_decrypt = Button( txt_window, text = "Decrypt Text" , command = decrypt)
-btn_decrypt.place( x=200, y=100 )
+btn_decrypt.place( x=200, y=60 )
 
 txt_window.mainloop()
 

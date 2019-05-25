@@ -23,6 +23,7 @@ def coprime(a, b):
         a, b = b, a % b
     return a
     
+
 def modInverse(a, m) : 
 
     a = a % m
@@ -33,23 +34,10 @@ def modInverse(a, m) :
 
             return x
     
-def extended_gcd(aa, bb):
-    lastremainder, remainder = abs(aa), abs(bb)
-    x, lastx, y, lasty = 0, 1, 1, 0
-    while remainder:
-        lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)
-        x, lastx = lastx - quotient*x, x
-        y, lasty = lasty - quotient*y, y
-    return lastremainder, lastx * (-1 if aa < 0 else 1), lasty * (-1 if bb < 0 else 1)
-
-#Euclid's extended algorithm for finding the multiplicative inverse of two numbers    
 def modinv(a, m):
-	g, x, y = extended_gcd(a, m)
-	if g != 1:
-		raise Exception('Modular inverse does not exist')
-	return x % m    
-
-        
+	d = modInverse(a, m)
+	return d	
+	
 def is_prime(num):
     if num == 2:
         return True
@@ -69,13 +57,12 @@ def generate_keypair(p, q):
 
     n = p * q
 
-    #Phi is the totient of n
+    
     phi = (p-1) * (q-1)
 
-    #Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
+    print(e)
 
-    #Use Euclid's Algorithm to verify that e and phi(n) are comprime 
     g = coprime(e, phi)
   
     while g != 1:
@@ -113,7 +100,7 @@ def main():
     try:
         p = int(entry_p.get())
         q = int(entry_q.get())
-        #print("Generating your public/private keypairs now . . .")  #TODO no entry in entry boxes
+        #print("Generating your public/private keypairs now . . .")
         public, private = generate_keypair(p, q)
         finish()
     
